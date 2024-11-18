@@ -1,48 +1,512 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fatemeh Zahra Safaeipour - Academic Journey</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Fatemeh Zahra Safaeipour</h1>
-        <p>PhD Student in Computer Science</p>
-    </header>
-    <nav>
-        <a href="#" onclick="showSection('home')">Home</a>
-        <a href="#" onclick="showSection('publications')">Publications</a>
-        <a href="#" onclick="showSection('projects')">Projects</a>
-        <a href="#" onclick="showSection('contact')">Contact</a>
-    </nav>
-    <div class="container">
-        <div id="home" class="section active">
-            <h2>About Me</h2>
-            <p>Hello! I am Fatemeh Zahra Safaeipour, a PhD student specializing in Wireless Communications with Applied AI and ML at the University of Kansas.</p>
-            <h2>Academic Journey</h2>
-            <p>I am currently pursuing my PhD in Computer Science at the University of Kansas. My research focuses on Wireless Communications with a strong emphasis on applying AI and ML techniques.</p>
-            <p>Previously, I completed my Master's and Bachelor's degrees in related fields, where I developed a strong foundation in computer science and engineering.</p>
-            <h2>Resume/CV</h2>
-            <p>You can download my resume/CV <a href="path/to/your/resume.pdf" target="_blank">here</a>.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fatemeh Zahra Safaeipour</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--Montserrat font-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js"></script>
+  </head>
+  <body>   
+    <section>
+      <!-- MOBILE NAVIGATION -->
+      <div class="w3-container w3-padding-16 w3-border-bottom w3-hide-medium w3-hide-large">
+        <a href="#home" class="w3-bar-item w3-button w3-hover-none">Home</a>
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="toggleNavigation()">&#9776;</a>
+      </div>
+      <div id="mobile-nav" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-sticky">
+        <a href="#about" class="w3-bar-item w3-button w3-center w3-hover-none w3-border-white w3-bottombar w3-hover-border- w3-hover-deep-orange w3-hover-text-deep-orange" onclick="toggleNavigation()">ABOUT</a>
+        <a href="#resume" class="w3-bar-item w3-button w3-center w3-hover-none w3-border-white w3-bottombar w3-hover-border-deep-orange w3-hover-text-deep-orange" onclick="toggleNavigation()">RESUME</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-center w3-hover-none w3-border-white w3-bottombar w3-hover-border-deep-orange w3-hover-text-deep-orange" onclick="toggleNavigation()">CONTACT</a>
+      </div>
+
+      <!-- SOCIAL SECTION -->
+      <section class="image-section w3-quarter w3-fixed w3-padding-small">
+        <!--IMAGE/AVATAR-->
+        <img src="avatar.png" class="w3-circle w3-border w3-border-sand" style="border-width: 3px !important;"/>
+        <!--ACADEMIC SOCIAL NETWORK BUTTONS-->
+        <div class="links w3-margin-top w3-padding-small">
+            <!-- Google Scholar -->
+            <a class="icon-link w3-text-sand w3-hover-text-blue" href="https://scholar.google.com/citations?user=Nbfar9kAAAAJ" target="_blank">
+                <i data-feather="book"></i> <!-- Use book icon for Google Scholar, as Feather doesn't have a specific scholar icon -->
+            </a>
+            
+            <!-- GitHub -->
+            <a class="icon-link w3-text-sand w3-hover-text-blue" href="https://github.com/fzarasp" target="_blank">
+                <i data-feather="github"></i>
+            </a>
+            
+            <!-- LinkedIn -->
+            <a class="icon-link w3-text-sand w3-hover-text-blue" href="https://linkedin.com/in/fzarasp" target="_blank">
+                <i data-feather="linkedin"></i>
+            </a>
         </div>
-        <div id="publications" class="section">
-            <h2>Publications</h2>
-            <p>List your publications here...</p>
+
+        <!--CV DOWNLOAD BUTTON-->
+        <div class="w3-container w3-padding-16">
+          <a href="./resume.pdf" class="w3-blue w3-hover-blue w3-button w3-round-small w3-hover-deep-orange w3-padding-large" target="_blank" download="resume.pdf">
+            <i data-feather="arrow-down" style="vertical-align: -0.35em;"></i>
+            <span class="w3-margin-left download-text">Resume</span>
+          </a>
         </div>
-        <div id="projects" class="section">
-            <h2>Projects</h2>
-            <p>List your projects here...</p>
+<!-- CONTACT DETAILS SECTION -->
+<div class="w3-container w3-padding-16 contact-details" >
+    <p><strong>Email:</strong> fzsafaei [at] ku [dot] edu</p>
+    <p><strong>Phone:</strong> <span class="phone-number" id="phone-number" style="color:  #ffffff;">+1 (785) ***-****</span></p>
+</div>
+
+ 
+        
+      </section>
+
+      <!--CV CONTENT SECTION-->
+      <section class="w3-threequarter w3-padding-large w3-right">
+        <!--DESKTOP NAVIGATION-->
+        <div class="w3-container w3-padding-large w3-border-bottom w3-hide-small">
+          <a href="#home" class="w3-bar-item w3-button w3-hover-none w3-border-white w3-bottombar w3-hover-border-deep-orange">Home</a>
+          <a href="#contact" class="w3-bar-item w3-button w3-hover-none w3-border-white w3-bottombar w3-hover-border-deep-orange" style="border-width: 2px !important;" onclick="toggleNavigation()">Contact</a>
+          <a href="#about" class="w3-bar-item w3-button w3-hover-none w3-border-white w3-bottombar w3-hover-border-deep-orange" style="border-width: 2px !important;" onclick="toggleNavigation()">About</a>
         </div>
-        <div id="contact" class="section">
-            <h2>Contact</h2>
-            <p>Email: <a href="mailto:fzsafaei@ku.edu">fzsafaei@ku.edu</a></p>
+        <div class="content-container w3-margin-top-2">
+          <!--HOME SECTION-->
+          <div id="home" class="home w3-container w3-margin-top-4 w3-cursive">
+            <h1 style="font-size: 25pt;">Fatemeh Zahra Safaeipour</h1>
+          </div>
+
+<!--ABOUT SECTION-->
+<div id="about" class="w3-container w3-margin-top-10-percent w3-cursive w3-large">
+    <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">ABOUT</h2>
+    <p class="w3-margin-top-2">
+        I am a Ph.D. student in the Department of Electrical Engineering and Computer Science at the University of Kansas (KU), focusing on advancing communication systems and machine learning.
+    </p>
+    <p>
+        My research emphasizes task-oriented communication systems, semantic communication, and split learning in wireless environments. I aim to optimize resource management and enhance communication effectiveness for power-constrained devices.
+    </p>
+    <p>
+        I hold dual Bachelor’s degrees in Electrical Engineering and Computer Engineering from AmirKabir University of Technology (AUT). During my undergraduate studies, I contributed to cutting-edge projects like network slicing in 5G, software-defined networking (SDN), and Open RAN (O-RAN) solutions, focusing on scalability and efficiency.
+    </p>
+    <p>
+        I am skilled in Python, MATLAB, TensorFlow, Docker, and React, among other technologies, and my projects range from developing a Bayesian Classifier to implementing multithreading in the XV6 operating system. My current work includes designing communication systems for edge devices and exploring Bayesian optimization techniques to improve system performance.
+    </p>
+</div>
+        <!--EDUCATION SECTION-->
+        <div class="w3-container w3-margin-top-2 w3-cursive">
+            <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Education</h2>
+
+            <div class="">
+                <h4>Computer Science, PhD</h4>
+                <p>University of Kansas (KU) | Lawrence, KS | 2022 - Present</p>
+            </div>
+
+            <div class="">
+                <h4>Electrical Engineering, BSc</h4>
+                <p>AmirKabir University of Technology (AUT) | Tehran, Iran | 2017 - 2021</p>
+            </div>
+
+            <div class="">
+                <h4>Computer Engineering, BSc</h4>
+                <p>AmirKabir University of Technology (AUT) | Tehran, Iran | 2019 - 2022</p>
+            </div>
         </div>
+
+
+
+        <!--SKILLS SECTION-->
+<div class="w3-container w3-margin-top-2 w3-cursive">
+    <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Skills</h2>
+
+    <!-- Programming Languages -->
+    <h4>Programming Languages</h4>
+    <p>C, C++, Python, MATLAB, SQL, Java, JavaScript, Swift</p>
+
+    <!-- Libraries & Frameworks -->
+    <h4>Libraries & Frameworks</h4>
+    <p>
+        <strong>Machine Learning:</strong> TensorFlow, Keras, PyTorch, Scikit-learn<br>
+        <strong>Data Processing:</strong> Pandas, NumPy, Beautiful Soup, Scrapy<br>
+        <strong>Web Development:</strong> Django, Flask, React<br>
+        <strong>GPU Programming:</strong> CUDA
+    </p>
+
+    <!-- Database Management -->
+    <h4>Database Management</h4>
+    <p>MySQL, MongoDB</p>
+
+    <!-- Tools & Software -->
+    <h4>Tools & Software</h4>
+    <p>Docker, Git, Simulink, GNU Radio, Mininet, ONOS</p>
+
+    <!-- Cloud & DevOps -->
+    <h4>Cloud & DevOps</h4>
+    <p>AWS, Docker, Kubernetes, OSM (Open Source MANO), OpenStack, ONOS</p>
+
+    <!-- Operating Systems -->
+    <h4>Operating Systems</h4>
+    <p>Linux, Windows, macOS</p>
+
+
+</div>
+
+        
+
+<!--EMPLOYMENT HISTORY SECTION-->
+<div class="w3-container w3-margin-top-2 w3-cursive">
+    <h2 id="experience" class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Experience</h2>
+
+    <!-- Communication Design for Edge Devices -->
+    <div>
+        <h4>Research | Communication Design for Edge Devices</h4>
+        <p>University of Kansas | Lawrence, KS | Oct 2024 – Present</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Designed communication systems for edge devices, focusing on low-power, latency-sensitive applications and real-time data transmission.</li>
+            <li>Leveraged split learning architectures, neural networks, and Bayesian Optimization (BO) to enhance resource allocation, signal processing, and task performance.</li>
+        </ul>
     </div>
-    <footer>
-        <p>&copy; 2024 Fatemeh Zahra Safaeipour</p>
-    </footer>
-    <script src="scripts.js"></script>
-</body>
+
+    <!-- Goal-Oriented Communication -->
+    <div>
+        <h4>Research | Goal-Oriented Communication</h4>
+        <p>University of Kansas | Lawrence, KS | Aug 2023 – Oct 2024</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Optimized power allocation and split-point selection for power-limited devices in wireless networks, addressing power and delay constraints.</li>
+            <li>Developed BROWSER, a Bayesian Optimization framework with enhanced acquisition function, reducing data sample requirements by 81.5% while achieving low regret.</li>
+        </ul>
+    </div>
+
+    <!-- Semantic-Aware Communication -->
+    <div>
+        <h4>Research | Semantic-Aware Communication</h4>
+        <p>University of Kansas | Lawrence, KS | Aug 2022 – Aug 2023</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a framework for goal-oriented image transmission, utilizing object detection (RetinaNet ResNet50 FPN), image captioning, and text-to-image generation (DALL-E2).</li>
+            <li>Achieved 99% data reduction while maintaining high object detection accuracy using the COCO 2014 dataset.</li>
+        </ul>
+    </div>
+
+    <!-- O-RAN Implementation -->
+    <div>
+        <h4>Internship | O-RAN Implementation</h4>
+        <p>Mobile Communications Company of Iran (MCI), Hamrah-e Avval | Tehran, Iran | 2021 – 2022</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed O-RAN solutions for network scalability and 5G performance, focusing on service management and near-real-time components.</li>
+            <li>Mentored two interns on O-RAN specifications, NFV, SDN, and using OpenStack and Kubernetes for deployment and orchestration.</li>
+        </ul>
+    </div>
+
+    <!-- Network Slicing in 5G -->
+    <div>
+        <h4>Research | Network Slicing in 5G</h4>
+        <p>AmirKabir University of Technology (AUT) | Tehran, Iran | 2020 – 2021</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Optimized resource allocation and QoS in 5G networks using Docker, Kubernetes, and OpenStack for deploying VNFs.</li>
+            <li>Simulated and evaluated network slicing scenarios in OSM Open Source MANO.</li>
+        </ul>
+    </div>
+
+    <!-- Designing Mobility in 2040 -->
+    <div>
+        <h4>Hackathon | Designing Mobility in 2040</h4>
+        <p>TU Austria Innovation Marathon, AVL | Graz, Austria | August 2021</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Collaborated to design AI-driven solutions for automating urban mobility, integrating future city infrastructure and mobility challenges.</li>
+            <li>Used Agile methodologies and Miro for prototyping and effectively presented final designs to industry stakeholders.</li>
+        </ul>
+    </div>
+
+    <!-- NFV and SDN Implementation -->
+    <div>
+        <h4>Internship | NFV and SDN Implementation</h4>
+        <p>AmirKabir University of Technology (AUT) | Tehran, Iran | Summer 2020</p>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Designed and implemented NFV and SDN solutions to enhance telecom infrastructure scalability and efficiency.</li>
+            <li>Used OpenDaylight and Mininet for network automation and performance optimization.</li>
+        </ul>
+    </div>
+</div>
+
+        
+
+<!--PROJECTS SECTION-->
+<div id="projects" class="w3-container w3-margin-top-2 w3-cursive">
+    <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Projects</h2>
+
+    <!-- Hallux Valgus Detection with CNN -->
+    <div class="">
+        <h4>Hallux Valgus Detection with CNN</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a <strong>Convolutional Neural Network (CNN)</strong> model in <strong>TensorFlow</strong> to detect <strong>Hallux Valgus deformity</strong> from medical images. The dataset, collected by me and my colleagues through contributions from friends and family, consisted of <strong>60 positive samples</strong> and <strong>240 negative samples</strong>, and was labeled by medical experts at <strong>Shahid Beheshti University</strong>.</li>
+            <li>Utilized <strong>Keras</strong> to design the CNN, applying techniques like <strong>image augmentation</strong> (including horizontal flipping, zooming, and rotation) to address the class imbalance in the dataset. The model was trained and evaluated with <strong>accuracy</strong> and <strong>f-score</strong> metrics, and visualized results with plots.</li>
+            <li>Achieved an accuracy of <strong>70-80%</strong> and an <strong>f-score</strong> between <strong>60-70%</strong> on the validation set, despite using a relatively small dataset. These results highlight the model's potential effectiveness for detecting Hallux Valgus deformities, suggesting its applicability in clinical environments with limited data.</li>
+        </ul>
+    </div>
+
+    <!-- Thread System Call Implementation in XV6 -->
+<div class="project">
+    <h4>Thread System Call Implementation in XV6</h4>
+    <ul class="w3-ul">
+        <li>Expanded <strong>XV6</strong>, a Linux-based operating system lacking multithreading, by introducing <code>thread_create</code> and <code>thread_wait</code> system calls to enable shared address space between parent processes and threads.</li>
+        <li>Enhanced process structure with <code>stackTop</code> and <code>threads</code> variables to manage thread stacks and counts, and updated <code>sysproc.c</code> to implement threading functionality.</li>
+        <li>Validated the multithreading implementation with tests demonstrating shared memory access and assessing system call performance.</li>
+    </ul>
+</div>
+
+<!-- Full Stack Design of a Stock Market Website -->
+<div class="project">
+    <h4>Full Stack Design of a Stock Market Website</h4>
+    <ul class="w3-ul">
+        <li>Led a team of two developers to design and develop a full-stack stock market website using <strong>JavaScript</strong>, <strong>HTML</strong>, <strong>CSS</strong>, <strong>Django</strong>, <strong>PHP</strong>, <strong>SQL</strong>, and <strong>Flask</strong>.</li>
+        <li>Extracted real-time stock data using <strong>Beautiful Soup</strong>, processed it server-side to generate predictions, and displayed the data and user-specific suggestions on the frontend.</li>
+        <li>Managed project tasks and ensured timely delivery using <strong>Git</strong> for version control and <strong>Trello</strong> for task management.</li>
+    </ul>
+</div>
+
+<!-- Music Dataset Classification for Genre Prediction -->
+<div class="project">
+    <h4>Music Dataset Classification for Genre Prediction</h4>
+    <ul class="w3-ul">
+        <li>Worked with a music dataset to classify audio into genres using <strong>CNN</strong> for feature extraction and <strong>LSTM</strong> for sequential predictions.</li>
+        <li>Applied <strong>Librosa</strong> for feature extraction (e.g., spectrograms, MFCCs) and used <strong>TensorFlow</strong> and <strong>Keras</strong> to train the model, improving genre classification accuracy.</li>
+        <li>Analyzed both the time domain and spectrum of audio data, enhancing prediction quality through advanced feature extraction techniques.</li>
+    </ul>
+</div>
+
+
+    <!-- Location-Routing Program -->
+    <div class="">
+        <h4>Location-Routing Program</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed an <strong>optimization program</strong> in <strong>Python</strong> using the <strong>Dijkstra algorithm</strong> to calculate the minimum distance from each node to the nearest hospital, aiming to optimize emergency response times.</li>
+            <li>Implemented efficient <strong>graph processing</strong> techniques by reading and converting the <strong>binary adjacency matrix</strong> from input files, and applied <strong>heapq</strong> for priority queue management.</li>
+            <li>Achieved accurate routing outputs, demonstrating the system's ability to minimize travel time in real-world emergency situations.</li>
+        </ul>
+    </div>
+
+    <!-- Wireless Sensor Network Design -->
+    <div class="">
+        <h4>Wireless Sensor Network Design</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Designed a <strong>Wireless Sensor Network (WSN)</strong> with four nodes using <strong>GNU Radio</strong> to simulate communication protocols and analyze network performance, including <strong>Bit Error Rate (BER)</strong> for all nodes.</li>
+            <li>The design utilized key components such as <strong>packet encoders</strong>, <strong>modulation techniques</strong> (e.g., QPSK), <strong>error correction algorithms</strong>, and <strong>frequency-domain processing</strong> to simulate realistic network communication. Integrated <strong>frequency synchronization</strong> and <strong>signal processing</strong> modules to enhance communication reliability.</li>
+            <li>Simulated real-time communication between nodes, producing <strong>BER</strong> and network performance outputs, and validated the design by evaluating different configurations and transmission routes within the network.</li>
+        </ul>
+    </div>
+
+    <!-- Digital Sampler and Reconstruction -->
+    <div class="">
+        <h4>Digital Sampler and Reconstruction</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a <strong>digital sampler</strong> and implemented <strong>linear</strong> and <strong>sinc interpolation</strong> techniques for signal reconstruction in <strong>MATLAB</strong>, aiming to accurately reconstruct signals from downsampled data.</li>
+            <li>Used <strong>MATLAB</strong> to simulate different sampling rates (20Hz and 4Hz) and applied <strong>sinc interpolation</strong> to recover the original signal with minimal distortion, comparing it against linear interpolation.</li>
+            <li>Evaluated the reconstructed signals and demonstrated that <strong>sinc interpolation</strong> outperforms <strong>linear interpolation</strong>, with the ability to more accurately recover signals, even at low sampling rates (4Hz).</li>
+        </ul>
+    </div>
+
+    <!-- Channel Equalizer Design -->
+    <div class="">
+        <h4>Channel Equalizer Design</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a channel equalizer system in <strong>MATLAB</strong> to enhance signal quality and reduce distortion in communication systems by implementing minimum-phase inverse filters and analyzing frequency responses.</li>
+            <li>Designed and tested the system by simulating frequency responses and evaluating quantization effects, demonstrating that reducing the quantization resolution from 32 bits to 8 bits led to a minor performance degradation of 2% in frequency response accuracy.</li>
+            <li>Applied the equalizer to audio signals, resulting in improvements in signal-to-noise ratio (SNR) by approximately <strong>15 dB</strong>, and achieved significant distortion reduction, validated through spectral analysis and qualitative audio comparisons.</li>
+        </ul>
+    </div>
+
+    <!-- NLP-Based Poetry Analysis -->
+    <div class="">
+        <h4>NLP-Based Poetry Analysis</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Designed and implemented an NLP-based system from scratch to analyze and classify Persian poetry into categories of Ferdowsi, Hafez, and Molavi, achieving an accuracy of up to <strong>62.28%</strong> on a test dataset of 2,753 poems.</li>
+            <li>Developed unigram and bigram models manually for feature extraction and probability estimation, implemented a backoff model with tunable parameters (<strong>\(\lambda_1, \lambda_2, \epsilon\)</strong>) to enhance classification accuracy, and processed over 24,700 Persian poems for training.</li>
+            <li>Demonstrated efficient poetry classification without relying on external libraries, achieving precise results through rigorous parameter tuning and model development.</li>
+        </ul>
+    </div>
+
+    <!-- Multiple Sequence Alignment Using Clustal Model -->
+    <div class="">
+        <h4>Multiple Sequence Alignment Using Clustal Model</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a <strong>Multiple Sequence Alignment (MSA)</strong> system using the Clustal model, incorporating the <strong>Neighbor-Joining method</strong> to construct a guide tree for aligning sequences dynamically.</li>
+            <li>Utilized a <strong>global alignment scoring method</strong> and <strong>pairwise local alignment</strong> for protein sequences with the PAM250 substitution matrix using a <strong>dynamic programming approach</strong> in Python, ensuring accurate alignment for selected <strong>GenBank</strong> datasets.</li>
+        </ul>
+    </div>
+
+    <!-- Bayesian Classifier -->
+    <div class="">
+        <h4>Bayesian Classifier</h4>
+        <ul class="w3-ul" style="font-weight: 500;">
+            <li>Developed a flexible Bayesian Classifier in <strong>Python</strong> for diverse datasets like Iris, evaluating performance under full and diagonal covariance structures.</li>
+            <li>Achieved high accuracy (<strong>98.72%</strong> for Bayes, <strong>95.70%</strong> for diagonal covariance, and <strong>95.51%</strong> for Naive Bayes) and visualized results with confusion and confidence matrices.</li>
+        </ul>
+    </div>
+
+    <!-- Treatment Effect Evaluation with Sequential Neural Network -->
+<div class="project">
+    <h4>Treatment Effect Evaluation with Sequential Neural Network</h4>
+    <ul class="w3-ul">
+        <li>Developed a sequential neural network to evaluate treatment effects using healthcare data from 116 patients, predicting "two years follow-up" and "outcome" with models trained on 90% of the data and validated on 10%.</li>
+        <li>Designed two models—a classification model achieving over 90% accuracy, and a regression model with mean squared error loss and RMSE metrics, achieving MSE of 50 on training data and 30 on evaluation data.</li>
+        <li>Used <strong>TensorFlow</strong>, <strong>Keras</strong>, and <strong>Pandas</strong> for implementation, with <strong>Matplotlib</strong> and <strong>Seaborn</strong> for performance visualization through loss curves and confusion matrices.</li>
+    </ul>
+</div>
+<!-- Audio Tone Extraction -->
+<div class="project">
+    <h4>Audio Tone Extraction</h4>
+    <ul class="w3-ul">
+        <li>Developed a <strong>MATLAB</strong>-based system for audio tone extraction, isolating specific frequencies (e.g., 200 Hz) using digital filters.</li>
+        <li>Designed and tested filters, including <strong>Moving Average (MA)</strong>, <strong>Butterworth</strong> (orders 4, 10, 30), and <strong>Kaiser window FIR</strong> (<em>&beta; = 0.5</em>), alongside an enhanced MA filter with 1500 points.</li>
+        <li>Achieved optimal results using Butterworth and Kaiser window filters, which demonstrated superior performance with lower orders, while the enhanced MA filter achieved similar accuracy at significantly higher complexity.</li>
+    </ul>
+</div>
+
+<!-- Colored Sudoku Solver -->
+<div class="project">
+    <h4>Colored Sudoku Solver</h4>
+    <ul class="w3-ul">
+        <li>Designed an <strong>advanced Sudoku solver</strong> in <strong>Python</strong> from scratch without external libraries, integrating number and color constraints, where adjacent cells must not share the same color.</li>
+        <li>Utilized the <strong>Backtracking algorithm</strong> with MRV (Minimum Remaining Value) and Degree heuristics for efficient solving of Sudoku puzzles.</li>
+    </ul>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+<!--Publication SECTION-->
+<div class="w3-container w3-margin-top-2 w3-cursive">
+    <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Publications</h2>
+    <ul class="w3-ul" style="font-weight: 500;">
+        <li>
+            <h4>BROWSER: Bayesian Robust Optimization for Wireless Split Learning with Efficient Resource Management</h4>
+            <p>
+                <strong>Submitted:</strong> November, 2024 <br>
+                Authors: <strong>Fatemeh Zahra Safaeipour</strong>, Morteza Hashemi
+            </p>
+        </li>
+        <li>
+            <h4>Semantic-Aware and Goal-Oriented Communications for Object Detection in Wireless End-to-End Image Transmission</h4>
+            <p>
+                <a href="https://arxiv.org/abs/2402.01064" target="_blank"><strong>arXiv:</strong></a> February, 2024 <br>
+                Authors: <strong>Fatemeh Zahra Safaeipour</strong>, Morteza Hashemi
+            </p>
+        </li>
+    </ul>
+</div>
+
+        <!-- IMAGE GALLERY 
+        <div id="gallery" class="w3-container w3-margin-top-2 w3-cursive">
+            <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Gallery</h2>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="avatar.png" alt="Description 1" onclick="openModal(this)">
+                    <p class="gallery-description">Description 1</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="avatar.png" alt="Description 2" onclick="openModal(this)">
+                    <p class="gallery-description">Description 2</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="avatar.png" alt="Description 3" onclick="openModal(this)">
+                    <p class="gallery-description">Description 3</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="avatar.png" alt="Description 3" onclick="openModal(this)">
+                    <p class="gallery-description">Description 3</p>
+                </div>
+
+               
+            </div>
+
+            <div id="modal" class="modal" onclick="closeModal()">
+                <span class="close">&times;</span>
+                <img class="modal-content" id="modalImage">
+                <div id="caption"></div>
+            </div>
+        </div>-->
+
+
+
+          <!--CONTACT SECTION-->
+            <!-- CONTACT DETAILS SECTION -->
+            <div id="contact" class="w3-container w3-margin-top-20-percent w3-cursive">
+                <h2 class="w3-border-bottom w3-border-blue" style="border-width: 3px !important;">Contact Details</h2>
+                <div class="w3-margin-top-2" style="font-weight: 500;">
+                    <p><strong>Email:</strong> fzsafaei [at] ku [dot] edu</p>
+                    <p><strong>Phone:</strong> <span class="phone-number" id="phone-number">+1 (785) ***-****</span></p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/fzarasp" target="_blank">linkedin.com/in/fzarasp</a></p>
+                    <p><strong>GitHub:</strong> <a href="https://github.com/fzarasp" target="_blank">github.com/fzarasp</a></p>
+                </div>
+            </div>
+
+
+        <!--FOOTER-->
+        <!-- Footer. This section contains an ad for W3Schools Spaces. You can leave it to support us. -->
+        <footer class="w3-container w3-border-top w3-center w3-margin-top-4">
+          <p>© 2024 - Fatemeh Zahra Safaeipour</p>
+        <!-- End footer -->
+        </footer>
+
+        <!--END OF CV SECTION-->
+      </section>      
+    </section>
+    <script>
+      // Function to toggle mobile navigation
+      function toggleNavigation() {
+        let nav = document.getElementById("mobile-nav");
+        if (nav.classList.contains('w3-show')) {
+          nav.classList.remove('w3-show');
+        } else { 
+          nav.classList.add('w3-show');
+        }
+      }
+
+        // Open the modal with the selected image and its description
+        function openModal(img) {
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("modalImage").src = img.src;
+            document.getElementById("caption").innerHTML = img.nextElementSibling.innerHTML;
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+
+    </script>
+    <script>
+      // Script to load feather icons
+      feather.replace()
+
+      // JavaScript to reveal the full phone number on hover
+document.addEventListener("DOMContentLoaded", function() {
+    const phoneNumberElement = document.getElementById("phone-number");
+
+    // Full phone number, obfuscated initially
+    const fullPhoneNumber = "+1 (785) 331-8296";
+
+    // Show the full number on hover
+    phoneNumberElement.addEventListener("mouseover", function() {
+        phoneNumberElement.textContent = fullPhoneNumber;
+    });
+
+    // Revert to obfuscated number when not hovering
+    phoneNumberElement.addEventListener("mouseout", function() {
+        phoneNumberElement.textContent = "+1 (785) ***-****";
+    });
+});
+
+    </script>
+  </body>
 </html>
