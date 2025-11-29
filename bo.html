@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayesian Optimization Evolution</title>
+    <title>Bayesian Optimization Evolution (Maximization)</title>
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
     <style>
         :root {
@@ -51,10 +51,10 @@
 
         .controls {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
             background: var(--color-surface);
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--color-border);
             flex-wrap: wrap;
@@ -64,13 +64,14 @@
         .control-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         label {
             font-size: 13px;
             font-weight: 500;
             color: var(--color-text);
+            white-space: nowrap;
         }
 
         input[type="range"] {
@@ -84,6 +85,21 @@
             border: 1px solid var(--color-border);
             border-radius: 4px;
             font-size: 13px;
+        }
+
+        select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+            font-size: 13px;
+        }
+
+        input[type="text"] {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+            font-size: 13px;
+            width: 100%;
         }
 
         button {
@@ -183,12 +199,36 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .control-group input[type="range"] {
+                width: 100%;
+            }
+
+            .plotly-div {
+                height: 320px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔬 Bayesian Optimization Evolution</h1>
-        <p class="subtitle">Visualizing how Gaussian Processes and Expected Improvement guide exploration</p>
+        <h1>🔬 Bayesian Optimization Evolution (Maximization)</h1>
+        <p class="subtitle">Gaussian Processes + Expected Improvement selecting high-value regions of f(x)</p>
 
         <div class="controls">
             <div class="control-group">
@@ -196,20 +236,41 @@
                 <input type="range" id="iteration" min="1" max="12" value="1">
                 <span id="iterDisplay">1/12</span>
             </div>
+
             <div class="control-group">
                 <label for="stepSize">Step Speed:</label>
                 <input type="range" id="stepSize" min="500" max="3000" value="1500" step="100">
             </div>
+
             <button id="playBtn">▶ Auto Play</button>
             <button id="resetBtn">↻ Reset</button>
-            <div class="control-group" style="margin-left: auto;">
-                <label for="noise">Noise Level:</label>
+
+            <div class="control-group">
+                <label for="noise">Noise:</label>
                 <input type="number" id="noise" min="0" max="0.5" step="0.01" value="0.1">
+            </div>
+
+            <div class="control-group" style="flex: 1 1 200px;">
+                <label for="funcSelect">Function:</label>
+                <select id="funcSelect">
+                    <option value="xcx">f(x) = (1/3)·x·cos(x)</option>
+                    <option value="sinpeak">f(x) = sin(2x) / (1 + 0.3x²)</option>
+                    <option value="gaussmix">Two Gaussian peaks</option>
+                    <option value="custom">Custom (JS)</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="customFuncGroup" style="flex: 1 1 100%; display: none;">
+                <label for="customFunc">f(x) =</label>
+                <input type="text" id="customFunc" placeholder="e.g., Math.sin(x) - 0.1*x*x">
             </div>
         </div>
 
         <div class="explanation">
-            <strong>How it works:</strong> Bayesian Optimization uses a Gaussian Process as a <strong>surrogate model</strong> to approximate the expensive black-box function. At each iteration, it evaluates the <strong>Expected Improvement (EI)</strong> acquisition function to select the most promising next point. The blue curve represents the mean prediction μ(x), the shaded area shows ±σ(x) confidence intervals, and the lower plots show the EI acquisition function guiding where to query next.
+            <strong>Maximization view:</strong> The Gaussian Process acts as a surrogate model of the black-box function.
+            At each step, the Expected Improvement (EI) acquisition function selects the next point expected to <strong>increase</strong>
+            the best value found so far. The blue curve is the GP mean μ(x), the shaded region is ±σ(x), the dotted line is
+            the true f(x), and the EI plot shows where the optimizer wants to sample next.
         </div>
 
         <div class="grid">
@@ -254,29 +315,73 @@
                 this.y = [];
                 this.iteration = 1;
                 this.maxIterations = 12;
+
                 this.noiseLevel = 0.1;
                 this.kernel_k = 1;
                 this.kernel_sigma = 1;
                 this.xRange = [-3, 6];
+
                 this.playing = false;
                 this.stepSpeed = 1500;
+
+                this.objectiveId = 'xcx';
+                this.customFuncStr = '';
+                this.customFuncCompiled = null;
 
                 this.initializeOptimization();
             }
 
-            // Objective function: f(x) = (1/3) * x * cos(x) + noise
+            setObjective(id, customStr) {
+                this.objectiveId = id;
+                this.customFuncStr = customStr || '';
+                this.customFuncCompiled = null;
+
+                if (id === 'custom' && this.customFuncStr.trim() !== '') {
+                    try {
+                        this.customFuncCompiled = new Function('x', 'return ' + this.customFuncStr);
+                    } catch (e) {
+                        this.customFuncCompiled = null;
+                    }
+                }
+            }
+
+            // true, noise-free function
+            trueFunction(x) {
+                switch (this.objectiveId) {
+                    case 'xcx':
+                        return (1 / 3) * x * Math.cos(x);
+                    case 'sinpeak':
+                        return Math.sin(2 * x) / (1 + 0.3 * x * x);
+                    case 'gaussmix':
+                        return Math.exp(-0.5 * Math.pow(x - 1, 2)) +
+                               0.8 * Math.exp(-0.2 * Math.pow(x - 4, 2));
+                    case 'custom':
+                        if (this.customFuncCompiled) {
+                            try {
+                                const v = this.customFuncCompiled(x);
+                                return Number.isFinite(v) ? v : 0;
+                            } catch (e) {
+                                return 0;
+                            }
+                        }
+                        return 0;
+                    default:
+                        return (1 / 3) * x * Math.cos(x);
+                }
+            }
+
+            // noisy observations for GP
             objectiveFunction(x) {
-                return (1 / 3) * x * Math.cos(x) +
+                return this.trueFunction(x) +
                     this.noiseLevel * (Math.random() - 0.5) * 2;
             }
 
-            // RBF Kernel
             rbfKernel(x1, x2) {
                 const dist = Math.pow(x1 - x2, 2);
-                return this.kernel_k * Math.exp(-dist / (2 * Math.pow(this.kernel_sigma, 2)));
+                return this.kernel_k *
+                    Math.exp(-dist / (2 * Math.pow(this.kernel_sigma, 2)));
             }
 
-            // Build kernel matrix
             buildKernelMatrix(X) {
                 const n = X.length;
                 const K = Array(n).fill(0).map(() => Array(n).fill(0));
@@ -288,7 +393,6 @@
                 return K;
             }
 
-            // Simple matrix inversion (Gaussian elimination)
             invertMatrix(M) {
                 const n = M.length;
                 if (n === 1) return [[1 / M[0][0]]];
@@ -328,7 +432,7 @@
                 return I;
             }
 
-            // GP Posterior prediction with observation noise in K
+            // GP posterior with observation noise included
             predictGP(xTest) {
                 if (this.x.length === 0) {
                     return { mean: 0, variance: this.kernel_k };
@@ -337,7 +441,6 @@
                 const K_XX = this.buildKernelMatrix(this.x);
                 const n = this.x.length;
                 const noiseVar = Math.pow(this.noiseLevel, 2) + 1e-6;
-
                 for (let i = 0; i < n; i++) {
                     K_XX[i][i] += noiseVar;
                 }
@@ -368,20 +471,21 @@
                 return { mean, variance: Math.max(0, variance) };
             }
 
-            // Expected Improvement (minimization)
+            // Expected Improvement (maximization)
             computeEI(xTest) {
                 const { mean, variance } = this.predictGP(xTest);
                 const sigma = Math.sqrt(variance);
 
                 if (this.y.length === 0) return 0;
 
-                const fStar = Math.min(...this.y);
-                const improvement = fStar - mean;
+                const fStar = Math.max(...this.y);
+                const improvement = mean - fStar;
 
                 if (sigma < 1e-6) return 0;
 
                 const Z = improvement / sigma;
-                const phi = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Z * Z);
+                const phi = (1 / Math.sqrt(2 * Math.PI)) *
+                            Math.exp(-0.5 * Z * Z);
                 const Phi = 0.5 * (1 + this.erf(Z / Math.sqrt(2)));
 
                 return improvement * Phi + sigma * phi;
@@ -398,7 +502,8 @@
                 const sign = x < 0 ? -1 : 1;
                 x = Math.abs(x);
                 const t = 1.0 / (1.0 + p * x);
-                const y = 1.0 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-x * x);
+                const y = 1.0 - (((((a5 * t + a4) * t + a3) * t + a2) * t +
+                                  a1) * t) * Math.exp(-x * x);
                 return sign * y;
             }
 
@@ -411,7 +516,6 @@
 
             addObservation() {
                 if (this.iteration === 1) {
-                    // fixed initial point
                     this.x.push(2);
                 } else {
                     const xTest = this.linspace(this.xRange[0], this.xRange[1], 200);
@@ -472,21 +576,23 @@
         }
 
         const optimizer = new BayesianOptimizer();
+
         const iterSlider = document.getElementById('iteration');
         const playBtn = document.getElementById('playBtn');
         const resetBtn = document.getElementById('resetBtn');
         const noiseInput = document.getElementById('noise');
         const stepSizeSlider = document.getElementById('stepSize');
+        const funcSelect = document.getElementById('funcSelect');
+        const customFuncGroup = document.getElementById('customFuncGroup');
+        const customFuncInput = document.getElementById('customFunc');
 
         let autoPlayInterval = null;
 
         function updateDisplay() {
             const { xTest, means, sigmas, eis } = optimizer.getPlotData();
 
-            // True function (noise-free)
-            const trueY = xTest.map(x => (1 / 3) * x * Math.cos(x));
+            const trueY = xTest.map(x => optimizer.trueFunction(x));
 
-            // GP mean
             const mainTrace1 = {
                 x: xTest,
                 y: means,
@@ -495,7 +601,6 @@
                 line: { color: 'rgb(33, 128, 141)', width: 3 }
             };
 
-            // GP ±σ band
             const upperBound = means.map((m, i) => m + sigmas[i]);
             const lowerBound = means.map((m, i) => m - sigmas[i]);
 
@@ -509,7 +614,6 @@
                 hoverinfo: 'skip'
             };
 
-            // Observed points
             const mainTrace3 = {
                 x: optimizer.x,
                 y: optimizer.y,
@@ -519,7 +623,6 @@
                 hovertemplate: 'x: %{x:.2f}<br>y: %{y:.2f}'
             };
 
-            // True f(x)
             const mainTrace4 = {
                 x: xTest,
                 y: trueY,
@@ -530,7 +633,6 @@
 
             const tracesMain = [mainTrace4, mainTrace2, mainTrace1, mainTrace3];
 
-            // Highlight latest query
             if (optimizer.x.length > 0) {
                 const lastX = optimizer.x[optimizer.x.length - 1];
                 const lastY = optimizer.y[optimizer.y.length - 1];
@@ -543,7 +645,6 @@
                     name: 'Latest Query',
                     hovertemplate: 'Latest: (%{x:.2f}, %{y:.2f})'
                 };
-
                 tracesMain.push(latestTrace);
             }
 
@@ -556,7 +657,6 @@
                 height: 400
             }, { responsive: true });
 
-            // EI plot
             const eiTrace = {
                 x: xTest,
                 y: eis,
@@ -586,7 +686,7 @@
             }
 
             Plotly.newPlot('eiPlot', eiTraces, {
-                title: 'Expected Improvement Acquisition Function',
+                title: 'Expected Improvement Acquisition Function (Maximization)',
                 xaxis: { title: 'x' },
                 yaxis: { title: 'EI(x)' },
                 hovermode: 'closest',
@@ -594,7 +694,6 @@
                 height: 400
             }, { responsive: true });
 
-            // Progress plot
             const iterationsArray = Array.from(
                 { length: optimizer.y.length },
                 (_, i) => i + 1
@@ -611,11 +710,10 @@
                 name: 'Observed Values'
             };
 
-            // Best-so-far trajectory (prefix minimum)
             let bestTrajectory = [];
-            let currentBest = Infinity;
+            let currentBest = -Infinity;
             for (let i = 0; i < optimizer.y.length; i++) {
-                currentBest = Math.min(currentBest, optimizer.y[i]);
+                currentBest = Math.max(currentBest, optimizer.y[i]);
                 bestTrajectory.push(currentBest);
             }
 
@@ -628,15 +726,14 @@
             };
 
             Plotly.newPlot('progressPlot', [progressTrace, bestTrace], {
-                title: 'Optimization Progress',
+                title: 'Optimization Progress (Maximization)',
                 xaxis: { title: 'Iteration' },
                 yaxis: { title: 'Function Value' },
                 hovermode: 'closest',
                 height: 300
             }, { responsive: true });
 
-            // Stats
-            const bestSoFar = optimizer.y.length > 0 ? Math.min(...optimizer.y) : NaN;
+            const bestSoFar = optimizer.y.length > 0 ? Math.max(...optimizer.y) : NaN;
 
             document.getElementById('iterDisplay').textContent =
                 `${optimizer.iteration}/${optimizer.maxIterations}`;
@@ -647,7 +744,7 @@
 
             if (optimizer.y.length > 1) {
                 const initialVal = optimizer.y[0];
-                const improvement = ((initialVal - bestSoFar) / Math.abs(initialVal)) * 100;
+                const improvement = ((bestSoFar - initialVal) / Math.abs(initialVal || 1)) * 100;
                 document.getElementById('improvement').textContent =
                     improvement.toFixed(1) + '%';
             } else {
@@ -672,8 +769,6 @@
             }, optimizer.stepSpeed);
         }
 
-        // Slider: re-run BO from scratch up to selected iteration,
-        // respecting the special first iteration at x = 2.
         iterSlider.addEventListener('change', () => {
             const targetIter = parseInt(iterSlider.value, 10);
             optimizer.x = [];
@@ -709,8 +804,11 @@
         });
 
         noiseInput.addEventListener('change', () => {
+            optimizer.playing = false;
+            clearInterval(autoPlayInterval);
             optimizer.reset(parseFloat(noiseInput.value));
             iterSlider.value = 1;
+            playBtn.textContent = '▶ Auto Play';
             updateDisplay();
         });
 
@@ -719,6 +817,34 @@
             if (optimizer.playing) {
                 startAutoPlay();
             }
+        });
+
+        funcSelect.addEventListener('change', () => {
+            const id = funcSelect.value;
+            customFuncGroup.style.display = id === 'custom' ? 'flex' : 'none';
+
+            optimizer.playing = false;
+            clearInterval(autoPlayInterval);
+            playBtn.textContent = '▶ Auto Play';
+
+            const customStr = id === 'custom' ? customFuncInput.value : '';
+            optimizer.setObjective(id, customStr);
+            optimizer.reset(parseFloat(noiseInput.value));
+            iterSlider.value = 1;
+            updateDisplay();
+        });
+
+        customFuncInput.addEventListener('change', () => {
+            if (funcSelect.value !== 'custom') return;
+
+            optimizer.playing = false;
+            clearInterval(autoPlayInterval);
+            playBtn.textContent = '▶ Auto Play';
+
+            optimizer.setObjective('custom', customFuncInput.value);
+            optimizer.reset(parseFloat(noiseInput.value));
+            iterSlider.value = 1;
+            updateDisplay();
         });
 
         updateDisplay();
